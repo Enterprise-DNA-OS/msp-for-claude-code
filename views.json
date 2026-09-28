@@ -1,13 +1,45 @@
 [
   {
-    "name": "week",
-    "title": "This week",
-    "subtitle": "MSP for Claude Code: what needs attention, rendered by npm run view",
+    "name": "service-week",
+    "title": "Service week",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Dispatch",
+        "sql": "select client,ticket,priority,technician,response_breached,resolution_breached,stale from sla_watch where status <> 'closed' order by priority"
+      },
+      {
+        "title": "Projects",
+        "sql": "select * from project_desk order by due_on"
+      }
+    ]
+  },
+  {
+    "name": "commercial-week",
+    "title": "Commercial week",
+    "sections": [
+      {
+        "title": "Agreement quantities",
+        "sql": "select client,name,basis,quantity,currency,unit_cents,included_minutes,renewal_due from agreement_desk order by client",
+        "note": "Quantities are current, not historical. Rates exclude tax."
+      },
+      {
+        "title": "Unbilled time",
+        "sql": "select client,ticket,description,technician,minutes,approved from unbilled_time order by client"
+      }
+    ]
+  },
+  {
+    "name": "risk-week",
+    "title": "Risk and client reviews",
+    "sections": [
+      {
+        "title": "Client reviews",
+        "sql": "select * from client_review order by review_due"
+      },
+      {
+        "title": "Privacy record checks",
+        "sql": "select * from compliance_findings order by client,rule",
+        "note": "A person assesses harm, exceptions and applicable law. These checks never notify anyone."
       }
     ]
   }

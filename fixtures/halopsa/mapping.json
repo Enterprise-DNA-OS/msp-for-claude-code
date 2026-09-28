@@ -1,0 +1,38 @@
+[
+  {
+    "entity": "clients",
+    "file": "clients.csv",
+    "key": "Client ID",
+    "columns": {
+      "Client Name": "name",
+      "Country": "country",
+      "Currency": "currency",
+      "Users": "licensed_users",
+      "Review Date": "review_due"
+    }
+  },
+  {
+    "entity": "technicians",
+    "file": "technicians.csv",
+    "key": "Agent ID",
+    "columns": {
+      "Agent Name": "name"
+    }
+  },
+  {
+    "entity": "tickets",
+    "file": "tickets.csv",
+    "key": "Ticket ID",
+    "columns": {
+      "Client ID": "client_id",
+      "Agent ID": "technician_id",
+      "Summary": "name",
+      "Priority": "priority",
+      "Status": "status",
+      "Opened": "opened_at",
+      "Response Due": "response_due",
+      "Resolve Due": "resolve_due",
+      "Last Activity": "last_activity_at"
+    }
+  }
+]

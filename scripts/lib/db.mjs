@@ -56,6 +56,7 @@ export async function getDb() {
       ssl: wantsSsl(url) ? { rejectUnauthorized: true } : undefined,
     });
     await pool.connect();
+    await pool.query("SET TIME ZONE 'UTC'");
     return {
       mode: 'postgres',
       async query(sql, params = []) {
@@ -76,6 +77,7 @@ export async function getDb() {
   const { PGlite } = await import('@electric-sql/pglite');
   const db = new PGlite(dir, { parsers: { 1082: (value) => value } });
   await db.waitReady;
+  await db.exec("SET TIME ZONE 'UTC'");
   return {
     mode: 'pglite',
     dir,

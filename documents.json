@@ -1,11 +1,68 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "service-review",
+    "title": "Client service review draft",
+    "for_each": "select id,name from clients",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Account summary",
+        "sql": "select * from client_review where id=$1"
+      },
+      {
+        "title": "Open work",
+        "sql": "select t.name,t.priority,t.status,t.response_due,t.resolve_due from tickets t where client_id=$1 and status<>'closed' order by priority"
+      },
+      {
+        "title": "Device records",
+        "sql": "select name,serial,status,warranty_until,last_seen from devices where client_id=$1"
+      }
+    ]
+  },
+  {
+    "name": "billing-proposal",
+    "title": "Billing proposal for review, not a tax invoice",
+    "for_each": "select id,name from billing_runs",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Frozen calculation",
+        "sql": "select period,currency,quantity,base_cents,included_minutes,used_minutes,overage_minutes,overage_cents,total_cents from billing_runs where id=$1",
+        "note": "Current quantity at snapshot time. Excludes tax, credits, licences and pass-through charges. Reconcile before invoicing elsewhere."
+      },
+      {
+        "title": "Included work",
+        "sql": "select e.name,e.worked_at,e.minutes from billed_time b join time_entries e on e.id=b.time_entry_id where b.billing_run_id=$1"
+      }
+    ]
+  },
+  {
+    "name": "incident-review",
+    "title": "Internal privacy incident review",
+    "for_each": "select id,name from incidents",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Recorded facts and notification evidence",
+        "sql": "select name,discovered_at,serious_harm,assessment,regulator_notified_at,people_notified_at,exception_reason,status from incidents where id=$1",
+        "note": "Internal record only. The privacy officer decides duties and notifications."
+      },
+      {
+        "title": "Outstanding checks",
+        "sql": "select rule,finding from compliance_findings where id=$1"
+      }
+    ]
+  },
+  {
+    "name": "renewal-review",
+    "title": "Agreement renewal review draft",
+    "for_each": "select id,name from agreements",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Current agreement",
+        "sql": "select client,name,basis,quantity,currency,unit_cents,included_minutes,overage_cents,renewal_due,ends_on from agreement_desk where id=$1"
+      }
     ]
   }
 ]
